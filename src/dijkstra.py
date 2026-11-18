@@ -2,15 +2,16 @@ import heapq
 import math
 
 from datos import PESO_RUTA
+from modelo import Grafo
 
 class Dijkstra:
-    def __init__(self, grafo):
+    def __init__(self, grafo : Grafo):
         self.grafo = grafo
         self.distancias = {}
         self.predecesores = {}
         self.origen_actual = None
 
-    def calcular_desde(self, origen: str):
+    def calcular_desde(self, origen: str) :
 
         if origen not in self.grafo:
             raise KeyError(f"El origen {origen} no existe en el grafo.")
@@ -23,7 +24,7 @@ class Dijkstra:
 
         self.distancias[origen] = 0
         cola = [(0, origen)]
-        visitados = set()
+        visitados = set() # para realizar operaciones de pertenencia
 
         while cola:
             distancia_actual, actual = heapq.heappop(cola)
