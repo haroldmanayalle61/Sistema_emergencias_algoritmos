@@ -1,0 +1,21 @@
+GRUPO 07: Distribución de ayuda humanitaria y comunicaciones de emergencia
+
+CONTENIDO
+- vertices.csv: 24 vértices sintéticos con coordenadas SOLO para representación esquemática.
+- aristas.csv: 48 aristas no dirigidas; cada fila se incorpora en ambos sentidos.
+- grafo_manual.csv: grafo de 6 vértices y 9 aristas para traza manual independiente.
+
+INTERPRETACIÓN
+- tiempo_entrega_min: minutos de entrega estimado. Se usa en Dijkstra y Floyd-Warshall.
+- costo_enlace_miles_soles: miles de soles de enlace de emergencia. Se usa en Prim y Kruskal.
+- Los dos pesos son positivos y artificiales, creados únicamente con fines académicos.
+- Si N01–N02 existe, N02–N01 es el mismo enlace: NO crear dos aristas distintas para Kruskal.
+- No combinar unidades diferentes ni afirmar que los valores representan mediciones reales.
+
+ESCENARIO
+Eliminar simultáneamente N02–N08 y N15–N21, medir pérdida de accesibilidad y recalcular el árbol mínimo de la red remanente si es conexa.
+
+PROHIBICIONES Y PERMISOS
+- Implementación propia de los cuatro algoritmos en Python con POO.
+- Prohibido usar networkx para shortest_path, floyd_warshall, minimum_spanning_tree u otros algoritmos de resolución directa.
+- Permitido networkx para dibujar y validar resultados de forma independiente.
