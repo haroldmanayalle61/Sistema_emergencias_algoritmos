@@ -1,4 +1,5 @@
 import math
+from copy import deepcopy
 
 PESO_RUTA = "peso_ruta"
 PESO_RED = "peso_red"
@@ -35,7 +36,7 @@ class Vertice:
         self._id = id.strip()
         self._nombre = str(nombre)
         self._rol = str(rol)
-        self._metadatos = dict(metadatos) if metadatos else {}
+        self._metadatos = deepcopy(metadatos) if metadatos is not None else {}
 
     @property
     def id(self):
@@ -51,8 +52,8 @@ class Vertice:
 
     @property
     def metadatos(self):
-        """Copia de los metadatos (coordenadas esquemáticas, etc.)."""
-        return dict(self._metadatos)
+        """Copia profunda de los metadatos, incluidos sus valores anidados."""
+        return deepcopy(self._metadatos)
 
     def copiar(self):
         return Vertice(self._id, self._nombre, self._rol, self._metadatos)
@@ -70,7 +71,7 @@ class Vertice:
 class Arista:
     """Conexión no dirigida entre dos ids, con ``peso_ruta`` y ``peso_red``."""
 
-    def __init__(self, origen:Vertice, destino:Vertice, peso_ruta, peso_red, metadatos=None):
+    def __init__(self, origen: str, destino: str, peso_ruta, peso_red, metadatos=None):
         if not isinstance(origen, str) or not isinstance(destino, str):
             raise TypeError("origen y destino deben ser ids (texto)")
         if origen == destino:
@@ -81,7 +82,7 @@ class Arista:
         self._destino = destino
         self._peso_ruta = _validar_peso(peso_ruta, "peso_ruta")
         self._peso_red = _validar_peso(peso_red, "peso_red")
-        self._metadatos = dict(metadatos) if metadatos else {}
+        self._metadatos = deepcopy(metadatos) if metadatos is not None else {}
 
     @property
     def origen(self):
@@ -110,7 +111,8 @@ class Arista:
 
     @property
     def metadatos(self):
-        return dict(self._metadatos)
+        """Copia profunda de los metadatos, incluidos sus valores anidados."""
+        return deepcopy(self._metadatos)
 
     @property
     def clave(self):
@@ -187,7 +189,7 @@ class Grafo:
                     resultado.append(arista)
         return resultado
 
-    def vecinos(self, id_vertice)->list[tuple[Vertice,Arista]]:
+    def vecinos(self, id_vertice) -> list[tuple[str, Arista]]:
         """Lista de pares (id_vecino, Arista)."""
         self._requerir(id_vertice)
         return [(v, a) for v, a in self._adyacencia[id_vertice].items()]
@@ -259,22 +261,22 @@ class Grafo:
 
     # conectividad
     def componentes_conexas(self):
-        """Lista de componentes; cada una es una lista de ids (BFS iterativo)."""
+        """Lista de componentes; cada una es una lista de ids (DFS iterativo)."""
         visitados = set()
         componentes = []
         for inicio in self._vertices:
             if inicio in visitados:
                 continue
             visitados.add(inicio)
-            cola = [inicio]
+            pila = [inicio]
             componente = []
-            while cola:
-                actual = cola.pop()
+            while pila:
+                actual = pila.pop()
                 componente.append(actual)
                 for vecino in self._adyacencia[actual]:
                     if vecino not in visitados:
                         visitados.add(vecino)
-                        cola.append(vecino)
+                        pila.append(vecino)
             componentes.append(componente)
         return componentes
 

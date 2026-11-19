@@ -93,7 +93,7 @@ def _peso(ruta, n_fila, texto, columna):
 
 def cargar_vertices(ruta):
     """Lee vertices.csv -> lista de Vertice (tipo -> rol; resto -> metadatos)."""
-    mapa, filas = _leer_filas(ruta, COLUMNAS_VERTICE)
+    _, filas = _leer_filas(ruta, COLUMNAS_VERTICE)
     vistos = {}
     resultado = []
     for n_fila, fila in filas:

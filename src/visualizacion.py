@@ -131,7 +131,6 @@ def _dibujar_en_eje(
     posiciones: Mapping[str, tuple[float, float]] | None = None,
     mostrar_pesos: bool = True,
 ) -> dict[str, tuple[float, float]]:
-    _validar_metrica(metrica)
     red = _crear_grafo_visual(grafo, nx)
     pos = _obtener_posiciones(grafo, red, nx, posiciones)
 

@@ -34,6 +34,25 @@ class TestVerticeArista(unittest.TestCase):
         v.metadatos["x"] = 99
         self.assertEqual(v.metadatos["x"], 1)
 
+    def test_metadatos_anidados_independientes_de_entrada_y_consulta(self):
+        originales = {"detalle": {"coordenadas": [11, -1]}}
+        vertice = Vertice("A", metadatos=originales)
+        arista = Arista("A", "B", 1, 2, metadatos=originales)
+        originales["detalle"]["coordenadas"][0] = 50
+
+        for objeto in (vertice, arista):
+            with self.subTest(tipo=type(objeto).__name__):
+                consulta = objeto.metadatos
+                self.assertEqual(consulta["detalle"]["coordenadas"], [11, -1])
+                consulta["detalle"]["coordenadas"].append(99)
+                self.assertEqual(objeto.metadatos["detalle"]["coordenadas"], [11, -1])
+                copia = objeto.copiar()
+                self.assertIsNot(copia._metadatos["detalle"], objeto._metadatos["detalle"])
+                self.assertIsNot(
+                    copia._metadatos["detalle"]["coordenadas"],
+                    objeto._metadatos["detalle"]["coordenadas"],
+                )
+
     def test_tipos_y_valores_invalidos(self):
         with self.assertRaises(TypeError):
             Vertice(5)
@@ -117,6 +136,20 @@ class TestGrafo(unittest.TestCase):
         c.obtener_arista("B", "C").peso_ruta = 99
         self.assertEqual((g.num_vertices, g.num_aristas), (3, 3))
         self.assertEqual(g.obtener_arista("B", "C").peso_ruta, 2)
+
+    def test_copia_grafo_con_metadatos_anidados(self):
+        g = Grafo()
+        g.agregar_vertice(Vertice("A", metadatos={"detalle": {"valores": [1]}}))
+        g.agregar_vertice(Vertice("B"))
+        g.agregar_arista(Arista("A", "B", 1, 2, {"detalle": {"valores": [3]}}))
+        copia = g.copiar()
+
+        # Se inspecciona el almacenamiento para verificar la independencia real.
+        copia.obtener_vertice("A")._metadatos["detalle"]["valores"].append(2)
+        copia.obtener_arista("A", "B")._metadatos["detalle"]["valores"].append(4)
+        self.assertEqual(g.obtener_vertice("A").metadatos["detalle"]["valores"], [1])
+        self.assertEqual(g.obtener_arista("A", "B").metadatos["detalle"]["valores"], [3])
+        self.assertIs(copia.obtener_arista("A", "B"), copia.obtener_arista("B", "A"))
 
     def test_peso_y_ausencia(self):
         g = grafo_triangulo()

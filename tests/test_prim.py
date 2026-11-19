@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -47,6 +48,17 @@ def comprobar_arbol(test: unittest.TestCase, grafo: Grafo, aristas: list[Arista]
 
 
 class TestPrim(unittest.TestCase):
+    def test_sin_traza_no_prepara_fronteras_ni_detalles(self):
+        prim = Prim(grafo_con_empates())
+        with patch.object(prim, "_frontera_vigente") as frontera:
+            with patch.object(prim, "_detalle") as detalle:
+                aristas, costo = prim.calcular_arbol("A")
+        frontera.assert_not_called()
+        detalle.assert_not_called()
+        self.assertEqual(len(aristas), 2)
+        self.assertEqual(costo, 2)
+        self.assertEqual(prim.traza, [])
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.grafo_base = cargar_grafo_base(DATOS)

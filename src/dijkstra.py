@@ -4,18 +4,30 @@ import math
 from modelo import Grafo, PESO_RUTA
 
 class Dijkstra:
-    def __init__(self, grafo : Grafo):
+    def __init__(self, grafo: Grafo, *, registrar_traza: bool = False):
+        if not isinstance(registrar_traza, bool):
+            raise TypeError("registrar_traza debe ser bool")
         self.grafo = grafo
         self.distancias = {}
         self.predecesores = {}
         self.origen_actual = None
+        self.registrar_traza = registrar_traza
+        self.traza = []
 
     def calcular_desde(self, origen: str) :
+        """Calcula caminos y, opcionalmente, registra extracciones y mejoras.
+
+        Cada extracción conserva distancias y predecesores antes de explorar
+        sus vecinos. Las relajaciones registran cada mejora posterior.
+        """
 
         if origen not in self.grafo:
             raise KeyError(f"El origen {origen} no existe en el grafo.")
 
         self.origen_actual = origen
+        self.distancias = {}
+        self.predecesores = {}
+        self.traza = []
 
         for v in self.grafo.ids():
             self.distancias[v] = math.inf
@@ -27,6 +39,16 @@ class Dijkstra:
 
         while cola:
             distancia_actual, actual = heapq.heappop(cola)
+
+            if self.registrar_traza:
+                self.traza.append({
+                    "evento": "extraccion",
+                    "vertice": actual,
+                    "distancia": distancia_actual,
+                    "descartada": actual in visitados,
+                    "distancias": dict(self.distancias),
+                    "predecesores": dict(self.predecesores),
+                })
 
             if actual in visitados:
                 continue
@@ -40,6 +62,14 @@ class Dijkstra:
                 nueva_distancia = distancia_actual + peso_tramo
 
                 if nueva_distancia < self.distancias[vecino]:
+                    if self.registrar_traza:
+                        self.traza.append({
+                            "evento": "relajacion",
+                            "origen": actual,
+                            "destino": vecino,
+                            "distancia_anterior": self.distancias[vecino],
+                            "distancia_nueva": nueva_distancia,
+                        })
                     self.distancias[vecino] = nueva_distancia
                     self.predecesores[vecino] = actual
                     heapq.heappush(cola, (nueva_distancia, vecino))

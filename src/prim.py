@@ -119,7 +119,8 @@ class Prim:
                 descartadas: list[DetalleArista] = []
                 while frontera and frontera[0][4] in self.vertices_visitados:
                     peso_descartado, _, _, _, _, arista_descartada = heapq.heappop(frontera)
-                    descartadas.append(self._detalle(arista_descartada, peso_descartado))
+                    if self.registrar_traza:
+                        descartadas.append(self._detalle(arista_descartada, peso_descartado))
 
                 if not frontera:
                     if self.registrar_traza and descartadas:
@@ -135,7 +136,8 @@ class Prim:
                         )
                     break
 
-                frontera_antes_de_elegir = self._frontera_vigente(frontera)
+                if self.registrar_traza:
+                    frontera_antes_de_elegir = self._frontera_vigente(frontera)
                 peso, _, _, _, vecino, arista = heapq.heappop(frontera)
 
                 # una vez aquí, la arista necesariamente incorpora un vértice.
