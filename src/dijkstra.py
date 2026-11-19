@@ -1,8 +1,7 @@
 import heapq
 import math
 
-from datos import PESO_RUTA
-from modelo import Grafo
+from modelo import Grafo, PESO_RUTA
 
 class Dijkstra:
     def __init__(self, grafo : Grafo):
