@@ -70,7 +70,7 @@ class Vertice:
 class Arista:
     """Conexión no dirigida entre dos ids, con ``peso_ruta`` y ``peso_red``."""
 
-    def __init__(self, origen, destino, peso_ruta, peso_red, metadatos=None):
+    def __init__(self, origen:Vertice, destino:Vertice, peso_ruta, peso_red, metadatos=None):
         if not isinstance(origen, str) or not isinstance(destino, str):
             raise TypeError("origen y destino deben ser ids (texto)")
         if origen == destino:
@@ -187,7 +187,7 @@ class Grafo:
                     resultado.append(arista)
         return resultado
 
-    def vecinos(self, id_vertice):
+    def vecinos(self, id_vertice)->list[tuple[Vertice,Arista]]:
         """Lista de pares (id_vecino, Arista)."""
         self._requerir(id_vertice)
         return [(v, a) for v, a in self._adyacencia[id_vertice].items()]
