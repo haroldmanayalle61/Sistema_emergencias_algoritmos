@@ -1,0 +1,12 @@
+Python: 3.9.0
+Sistema: Windows-10-10.0.26100-SP0
+Procesador: Intel64 Family 6 Model 186 Stepping 2, GenuineIntel
+Semilla de grafos sinteticos: 2026
+Repeticiones: 5
+Unidad de los tiempos: milisegundos
+Origen de Dijkstra y Prim: primer id del grafo
+Se mide el calculo, incluida su inicializacion interna.
+Se excluyen carga, generacion de grafos, constructores, dibujos, impresiones y guardado de archivos.
+Las trazas estan desactivadas.
+Dijkstra todos calcula desde cada origen, pero solo conserva el resultado del ultimo origen.
+Floyd-Warshall conserva las matrices de todos los pares.
