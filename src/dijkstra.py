@@ -1,6 +1,5 @@
 import heapq
 import math
-
 from modelo import Grafo, PESO_RUTA
 
 class Dijkstra:
@@ -15,12 +14,7 @@ class Dijkstra:
         self.traza = []
 
     def calcular_desde(self, origen: str) :
-        """Calcula caminos y, opcionalmente, registra extracciones y mejoras.
-
-        Cada extracción conserva distancias y predecesores antes de explorar
-        sus vecinos. Las relajaciones registran cada mejora posterior.
-        """
-
+     
         if origen not in self.grafo:
             raise KeyError(f"El origen {origen} no existe en el grafo.")
 
@@ -35,7 +29,7 @@ class Dijkstra:
 
         self.distancias[origen] = 0
         cola = [(0, origen)]
-        visitados = set() # para realizar operaciones de pertenencia
+        visitados = set() 
 
         while cola:
             distancia_actual, actual = heapq.heappop(cola)
@@ -77,9 +71,6 @@ class Dijkstra:
         return self.distancias, self.predecesores
 
     def reconstruir_camino(self, destino: str):
-        """
-        Devuelve la lista de ids del camino, o None si el destino es inalcanzable.
-        """
         if not self.origen_actual:
             raise ValueError("Se debe llamar a calcular_desde primero.")
         if destino not in self.grafo:
